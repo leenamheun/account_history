@@ -6,8 +6,11 @@ import com.example.demo.history.entity.History
 import com.example.demo.history.repository.HistoryRepository
 import com.example.demo.office.entity.Office
 import com.example.demo.office.entity.OfficeBankAccount
+import com.example.demo.office.entity.OfficeStatus
+import com.example.demo.office.entity.OfficeTransfer
 import com.example.demo.office.repository.OfficeBankAccountRepository
 import com.example.demo.office.repository.OfficeRepository
+import com.example.demo.office.repository.OfficeTransferRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
@@ -22,7 +25,8 @@ internal class RecodeHandlerTest @Autowired constructor(
     private val officeRepository: OfficeRepository,
     private val accountRepository: BankAccountRepository,
     private val historyRepository: HistoryRepository,
-    private val officeBankAccountRepository: OfficeBankAccountRepository
+    private val officeBankAccountRepository: OfficeBankAccountRepository,
+    private val officeTransferRepository: OfficeTransferRepository
 ) {
     @Test
     fun initOffice() {
@@ -113,5 +117,19 @@ internal class RecodeHandlerTest @Autowired constructor(
         } catch (ioException: Exception) {
             ioException.printStackTrace()
         }
+    }
+
+    @Test
+    fun transferOffice() {
+        val source = officeRepository.findTopByCodeAndActive("B", true)
+            ?: throw Exception()
+        val target = officeRepository.findTopByCodeAndActive("A", true)
+            ?: throw Exception()
+
+        val transfer = OfficeTransfer(officeSource = source, officeTarget = target)
+        officeTransferRepository.save(transfer)
+        source.status = OfficeStatus.TRANSFERRING
+        source.active = false
+        officeRepository.save(source)
     }
 }

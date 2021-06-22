@@ -1,10 +1,10 @@
-package com.example.demo.office.repository.service.impl
+package com.example.demo.office.service.impl
 
 import com.example.demo.office.data.GetOfficeMaxByDetailRes
 import com.example.demo.office.data.GetOfficeMaxByRes
 import com.example.demo.office.repository.OfficeBankAccountRepository
 import com.example.demo.office.repository.OfficeRepository
-import com.example.demo.office.repository.service.OfficeService
+import com.example.demo.office.service.OfficeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,7 +25,7 @@ class OfficeServiceImpl(
                 val officeInfo = officeRepository.findByIdAndActive(it.officeId.toLong(), true)
                 GetOfficeMaxByDetailRes(sumAmt = it.sum.toLong(), brCode = officeInfo!!.code, brName = officeInfo.name)
             }.toMutableList()
-            returnList.add( GetOfficeMaxByRes(year = key.toLong(), dataList = dataList) )
+            returnList.add(GetOfficeMaxByRes(year = key.toLong(), dataList = dataList))
         }
         return returnList
     }

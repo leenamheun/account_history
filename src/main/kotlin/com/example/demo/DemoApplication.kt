@@ -10,13 +10,6 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableWebFlux
 @EnableJpaAuditing
 @SpringBootApplication
-/*@EntityScan(
-    "com.example.demo.history.entity.History"
-//    "com.example.demo.bankaccount.entity.BankAccount",
-//    "com.example.demo.common.entity.BaseEntity",
-//
-//    "com.example.demo.office.entity.Office"
-)*/
 class DemoApplication
 
 fun main(args: Array<String>) {

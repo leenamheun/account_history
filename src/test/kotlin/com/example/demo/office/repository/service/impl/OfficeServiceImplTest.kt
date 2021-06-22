@@ -1,9 +1,12 @@
 package com.example.demo.office.repository.service.impl
 
+import com.example.demo.backaccount.repository.BankAccountRepository
+import com.example.demo.history.repository.HistoryRepository
 import com.example.demo.office.data.GetOfficeMaxByDetailRes
 import com.example.demo.office.data.GetOfficeMaxByRes
 import com.example.demo.office.repository.OfficeBankAccountRepository
 import com.example.demo.office.repository.OfficeRepository
+import com.example.demo.office.repository.OfficeTransferRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 internal class OfficeServiceImplTest(
+    @Autowired private val historyRepository: HistoryRepository,
+    @Autowired private val bankAccountRepository: BankAccountRepository,
     @Autowired private val officeBackAccountRepository: OfficeBankAccountRepository,
+    @Autowired private val officeTransferRepository: OfficeTransferRepository,
     @Autowired private val officeRepository: OfficeRepository
 ) {
 
@@ -23,13 +29,35 @@ internal class OfficeServiceImplTest(
 
         val returnList = mutableListOf<GetOfficeMaxByRes>()
         for (key in grouping.keys) {
-             val dataList = grouping.get(key)!!.map {
+            val dataList = grouping.get(key)!!.map {
                 val officeInfo = officeRepository.findByIdAndActive(it.officeId.toLong(), true)
                 GetOfficeMaxByDetailRes(sumAmt = it.sum.toLong(), brCode = officeInfo!!.code, brName = officeInfo.name)
             }.toMutableList()
-            returnList.add( GetOfficeMaxByRes(year = key.toLong(), dataList = dataList) )
+            returnList.add(GetOfficeMaxByRes(year = key.toLong(), dataList = dataList))
         }
-        println(returnList.size)
         Assertions.assertTrue(returnList.get(0).year == 2018.toLong())
+    }
+
+    @Test
+    fun validateTotalPrice() {
+        val testOffice = 1
+        val officeBankAccountInfo = officeBackAccountRepository.findByOfficeId(testOffice.toLong())
+        val accountList = officeBankAccountInfo.map { it.account.id!! }.toMutableList()
+
+        val total = historyRepository.findByBankAccountId(accountList).map {
+           val price = if(it.cancle == "N") (it.price!!.toInt() - it.fee!!.toInt())
+                        else (it.price!!.toInt() - it.fee!!.toInt()) * -1
+            price
+        }.sumBy{ it }
+        Assertions.assertTrue(total==-46486000)
+    }
+
+    @Test
+    fun findOfficeByTransfer() {
+        val testOffice = "판교점"
+        val officeTransfer = officeRepository.findOfficeByTransfer(testOffice)
+        officeTransfer.forEach {
+            println("${it.officeId} ${it.sum}")
+        }
     }
 }

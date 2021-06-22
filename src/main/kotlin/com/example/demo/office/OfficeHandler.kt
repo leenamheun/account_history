@@ -1,6 +1,6 @@
 package com.example.demo.office
 
-import com.example.demo.office.repository.service.OfficeService
+import com.example.demo.office.service.OfficeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component

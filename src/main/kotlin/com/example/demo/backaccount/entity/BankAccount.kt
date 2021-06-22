@@ -7,7 +7,7 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
 
-@Entity(name = "BankAccount")
+@Entity
 class BankAccount(
     var name: String,
     var numbers: String,

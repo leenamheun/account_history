@@ -7,7 +7,7 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
-@Entity(name = "History")
+@Entity
 class History(
     var historyNo: Long? = 0,
     var date: String? = null,
@@ -16,6 +16,6 @@ class History(
     var cancle: String = "N",
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bankAccount_id")
+    @JoinColumn(name = "bank_account_id")
     var account: BankAccount,
 ) : BaseEntity()
