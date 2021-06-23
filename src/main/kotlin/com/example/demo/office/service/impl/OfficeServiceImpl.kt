@@ -2,6 +2,7 @@ package com.example.demo.office.service.impl
 
 import com.example.demo.office.data.GetOfficeMaxByDetailRes
 import com.example.demo.office.data.GetOfficeMaxByRes
+import com.example.demo.office.data.GetOfficeSumByRes
 import com.example.demo.office.repository.OfficeBankAccountRepository
 import com.example.demo.office.repository.OfficeRepository
 import com.example.demo.office.service.OfficeService
@@ -28,5 +29,13 @@ class OfficeServiceImpl(
             returnList.add(GetOfficeMaxByRes(year = key.toLong(), dataList = dataList))
         }
         return returnList
+    }
+
+    @Transactional(readOnly = true)
+    override fun findOfficeBySumPrice(name: String): GetOfficeSumByRes {
+        val officeInfo = officeRepository.findByNameAndActive(name, true)
+            ?: throw Exception() //404 발생하도록
+        val sum = officeRepository.findOfficeByTransfer(officeInfo.id!!)?.run { sum.toLong() }
+        return GetOfficeSumByRes(sum = sum, brCode = officeInfo.code, brName = officeInfo.name)
     }
 }

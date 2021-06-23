@@ -14,6 +14,7 @@ class OfficeRouter {
         path(basePath).nest {
             accept(MediaType.APPLICATION_JSON).nest {
                 GET("/maxBy", handler::maxBy)
+                GET("/sumBy", handler::sumBy)
             }
         }
     }

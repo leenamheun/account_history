@@ -4,6 +4,7 @@ import com.example.demo.backaccount.repository.BankAccountRepository
 import com.example.demo.history.repository.HistoryRepository
 import com.example.demo.office.data.GetOfficeMaxByDetailRes
 import com.example.demo.office.data.GetOfficeMaxByRes
+import com.example.demo.office.data.GetOfficeSumByRes
 import com.example.demo.office.repository.OfficeBankAccountRepository
 import com.example.demo.office.repository.OfficeRepository
 import com.example.demo.office.repository.OfficeTransferRepository
@@ -53,11 +54,26 @@ internal class OfficeServiceImplTest(
     }
 
     @Test
-    fun findOfficeByTransfer() {
-        val testOffice = "판교점"
-        val officeTransfer = officeRepository.findOfficeByTransfer(testOffice)
-        officeTransfer.forEach {
-            println("${it.officeId} ${it.sum}")
+    fun findOfficeByTransferWithNull() {
+        val testOffice = "분당점"
+        val officeInfo = officeRepository.findByNameAndActive(testOffice, true)
+            ?: throw Exception()
+
+        val officeSum = officeRepository.findOfficeByTransfer(officeInfo.id!!)?.let {
+            GetOfficeSumByRes(sum = it.sum.toLong())
         }
+        println(officeSum!!.sum)
+    }
+
+    @Test
+    fun findOfficeByTransferWithNotNull() {
+        val testOffice = "판교점"
+        val officeInfo = officeRepository.findByNameAndActive(testOffice, true)
+            ?: throw Exception()
+
+        val officeSum = officeRepository.findOfficeByTransfer(officeInfo.id!!)?.let {
+            GetOfficeSumByRes(sum = it.sum.toLong())
+        }
+        Assertions.assertTrue(officeSum!!.sum!!.toInt() == -140591300)
     }
 }

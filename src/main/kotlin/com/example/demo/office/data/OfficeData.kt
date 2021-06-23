@@ -10,3 +10,9 @@ data class GetOfficeMaxByDetailRes(
     val brCode: String? = null,
     val sumAmt: Long? = 0,
 )
+
+data class GetOfficeSumByRes(
+    val sum: Long?=0,
+    val brCode: String?=null,
+    val brName: String?=null
+)

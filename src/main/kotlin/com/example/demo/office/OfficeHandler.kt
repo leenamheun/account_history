@@ -17,4 +17,11 @@ class OfficeHandler(
             ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(it)
         }
     }
+
+    suspend fun sumBy(request: ServerRequest): ServerResponse {
+        val name = if (request.queryParam("name").isPresent) request.queryParam("name").get() else ""
+        return officeService.findOfficeBySumPrice(name).let {
+            ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(it)
+        }
+    }
 }
