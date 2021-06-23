@@ -1,6 +1,7 @@
 package com.example.demo.office.repository.service.impl
 
 import com.example.demo.backaccount.repository.BankAccountRepository
+import com.example.demo.exception.OfficeNotFoundException
 import com.example.demo.history.repository.HistoryRepository
 import com.example.demo.office.data.GetOfficeMaxByDetailRes
 import com.example.demo.office.data.GetOfficeMaxByRes
@@ -57,7 +58,7 @@ internal class OfficeServiceImplTest(
     fun findOfficeByTransferWithNull() {
         val testOffice = "분당점"
         val officeInfo = officeRepository.findByNameAndActive(testOffice, true)
-            ?: throw Exception()
+            ?: throw OfficeNotFoundException("분당점 폐점")
 
         val officeSum = officeRepository.findOfficeByTransfer(officeInfo.id!!)?.let {
             GetOfficeSumByRes(sum = it.sum.toLong())

@@ -11,7 +11,7 @@ interface OfficeBankAccountRepository : JpaRepository<OfficeBankAccount, Long> {
             "       sum(\n" +
             "               case\n" +
             "                   when h.cancle = 'N' then price - fee\n" +
-            "         FaqAllAdminRes          when h.cancle = 'Y' then (price - fee) * -1\n" +
+            "                   when h.cancle = 'Y' then (price - fee) * -1\n" +
             "                   end\n" +
             "           ) as sum\n" +
             "    from history h , office_bank_account obc\n" +

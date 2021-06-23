@@ -103,14 +103,14 @@ internal class RecodeHandlerTest @Autowired constructor(
                 val fee = arry[4]
                 val cancleType = arry[5]
 
-                val account = accountRepository.findTopByNumbersAndActive(accountNumbers, true) ?: throw Exception()
+                val account = accountRepository.findTopByNumbersAndActive(accountNumbers, true)
                 val history = History(
                     historyNo = historyNo.toLong(),
                     price = price.toLong(),
                     fee = fee.toLong(),
                     cancle = cancleType,
                     date = historyDate,
-                    account = account
+                    account = account!!
                 )
                 historyRepository.save(history)
             }

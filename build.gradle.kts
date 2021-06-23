@@ -33,8 +33,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
-    runtimeOnly("mysql:mysql-connector-java")
-    //runtimeOnly("com.h2database:h2")
+    runtimeOnly("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {

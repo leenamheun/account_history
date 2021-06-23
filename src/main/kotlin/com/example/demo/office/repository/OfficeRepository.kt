@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param
 
 interface OfficeRepository : JpaRepository<Office, Long> {
     fun findTopByCodeAndActive(code: String, active: Boolean): Office?
-    fun findByIdAndActive(id: Long, active: Boolean): Office?
+    fun findTopById(id: Long): Office?
     fun findByNameAndActive(name: String, active: Boolean): Office?
 
     @Query("select sum(t.sum) as sum from (\n" +

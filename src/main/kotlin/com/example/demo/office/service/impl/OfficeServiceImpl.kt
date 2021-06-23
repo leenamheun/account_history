@@ -1,5 +1,6 @@
 package com.example.demo.office.service.impl
 
+import com.example.demo.exception.OfficeNotFoundException
 import com.example.demo.office.data.GetOfficeMaxByDetailRes
 import com.example.demo.office.data.GetOfficeMaxByRes
 import com.example.demo.office.data.GetOfficeSumByRes
@@ -22,11 +23,14 @@ class OfficeServiceImpl(
 
         val returnList = mutableListOf<GetOfficeMaxByRes>()
         for (key in grouping.keys) {
-            val dataList = grouping.get(key)!!.map {
-                val officeInfo = officeRepository.findByIdAndActive(it.officeId.toLong(), true)
-                GetOfficeMaxByDetailRes(sumAmt = it.sum.toLong(), brCode = officeInfo!!.code, brName = officeInfo.name)
-            }.toMutableList()
-            returnList.add(GetOfficeMaxByRes(year = key.toLong(), dataList = dataList))
+            val contentList = mutableListOf<GetOfficeMaxByDetailRes>()
+            grouping.get(key)!!.forEach { group ->
+                val officeInfo = officeRepository.findTopById(group.officeId.toLong())?.let {
+                    GetOfficeMaxByDetailRes(sumAmt = group.sum.toLong(), brCode = it.code, brName = it.name)
+                } ?: return@forEach
+                contentList.add(officeInfo)
+            }
+            returnList.add(GetOfficeMaxByRes(year = key.toLong(), dataList = contentList))
         }
         return returnList
     }
@@ -34,7 +38,7 @@ class OfficeServiceImpl(
     @Transactional(readOnly = true)
     override fun findOfficeBySumPrice(name: String): GetOfficeSumByRes {
         val officeInfo = officeRepository.findByNameAndActive(name, true)
-            ?: throw Exception() //404 발생하도록
+            ?: throw OfficeNotFoundException("br code not found error")
         val sum = officeRepository.findOfficeByTransfer(officeInfo.id!!)?.run { sum.toLong() }
         return GetOfficeSumByRes(sum = sum, brCode = officeInfo.code, brName = officeInfo.name)
     }
