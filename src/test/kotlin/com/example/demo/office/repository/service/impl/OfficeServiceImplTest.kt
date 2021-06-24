@@ -32,7 +32,7 @@ internal class OfficeServiceImplTest(
         val returnList = mutableListOf<GetOfficeMaxByRes>()
         for (key in grouping.keys) {
             val dataList = grouping.get(key)!!.map {
-                val officeInfo = officeRepository.findByIdAndActive(it.officeId.toLong(), true)
+                val officeInfo = officeRepository.findTopById(it.officeId.toLong())
                 GetOfficeMaxByDetailRes(sumAmt = it.sum.toLong(), brCode = officeInfo!!.code, brName = officeInfo.name)
             }.toMutableList()
             returnList.add(GetOfficeMaxByRes(year = key.toLong(), dataList = dataList))
@@ -76,5 +76,14 @@ internal class OfficeServiceImplTest(
             GetOfficeSumByRes(sum = it.sum.toLong())
         }
         Assertions.assertTrue(officeSum!!.sum!!.toInt() == -140591300)
+    }
+
+    @Test
+    fun findOfficeByIdWithNull() {
+        val none = officeRepository.findTopById(2)
+        println("none ${none!!.name}")
+
+        Assertions.assertTrue(none.active == false)
+        Assertions.assertTrue(none.name == "분당점")
     }
 }
