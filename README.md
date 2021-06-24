@@ -24,7 +24,8 @@ DemoApplication을 구동합니다.
 		3-3) 연도별 관리점별 거래금액 합계를 구하고 합계금액이 큰 순서로 출력하는 API 개발.( 취소여부가 ‘Y’ 거래는 취소된 거래임)
 		GET localhost:8080/api/v1/office/maxBy
 
-		3-4) RecodeHandlerTest의 transferOffice() Test를 실행시켜 "분당점"을 폐업시켜주세요. 
+		3-4) 서버구동을 중단 후 RecodeHandlerTest의 transferOffice() Test를 실행시켜 "분당점"을 폐업시켜주세요. 
+   		테스트 케이스가 완료되었다면 다시 DemoApplication을 구동합니다.
 		
 		3-5) 분당점과 판교점을 통폐합하여 판교점으로 관리점 이관을 하였습니다. 지점명을 입력하면 해당지점의 거래금액 합계를 출력하는 API 개발( 취소여부가 ‘Y’ 거래는 취소된 거래임,)
 		GET localhost:8080/api/v1/office/sumBy?name=분당점
